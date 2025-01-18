@@ -117,7 +117,6 @@
 
     <div class="container-fluid h-100">
       <div class="row h-100">
-        <!-- User List Sidebar (4 Columns) -->
         <div class="col-3 sidebar p-3 chats">
           <h5 class="mb-3 text-white">Chats</h5>
           <div class="contacts">
@@ -128,15 +127,12 @@
               data-id="{{ room_name }}"
             >
               <div class="d-flex align-items-center">
-                <!-- Profile Icon -->
                 <img
                   src="https://ui-avatars.com/api/?name={{ item.user.username|urlencode }}&size=64&background=random"
                   alt="{{ item.user.username }}'s Profile Image"
                   class="profile-icon rounded-circle mr-3"
                   style="width: 1.8rem; height: 1.8rem; object-fit: cover"
                 />
-
-                <!-- Message Content and Username -->
                 <div class="w-100">
                   <div class="d-flex justify-content-between">
                     <strong class="text-truncate"
@@ -148,8 +144,6 @@
                     >
                     {% endif %}
                   </div>
-
-                  <!-- Last message preview -->
                   <div>
                     {% if item.last_message %}
                     <small
@@ -181,10 +175,7 @@
             </h5>
           </div>
         </div>
-
-        <!-- Chat Area (8 Columns) -->
         <div class="col-9 d-flex flex-column chat" data-id="{{ room_name }}">
-          <!-- Chat Header -->
           <div class="d-flex align-items-center p-1">
             <img
               src="https://ui-avatars.com/api/?name={{ room_name|urlencode }}&size=64&background=random"
@@ -193,8 +184,6 @@
             <h3 class="display-5 mb-0" style="padding-left: 10px">
               {{ room_name }}
             </h3>
-
-            <!-- Search Form aligned to the right -->
             <form method="GET" action="" class="p-3 ml-auto">
               <div class="form-group mb-0">
                 <input
@@ -208,8 +197,6 @@
               </div>
             </form>
           </div>
-
-          <!-- Chatbox -->
           <div id="chatbox" class="chatbox flex-fill p-3">
             {% if chats %} {% for message in chats %}
             <div
@@ -221,8 +208,6 @@
             <p class="no-messages">No Messages.</p>
             {% endif %}
           </div>
-
-          <!-- Message Input -->
           <div class="chat-input p-3">
             <div class="input-group">
               <input
@@ -251,13 +236,9 @@
 
     <script>
       const chatbox = document.querySelector("#chatbox");
-
-      // Function to scroll to the bottom of the chatbox
       function scrollToBottom() {
         chatbox.scrollTop = chatbox.scrollHeight;
       }
-
-      // Scroll to bottom when the page is loaded
       scrollToBottom();
 
       const roomName = JSON.parse(
@@ -295,16 +276,13 @@
               room_name: "{{ room_name }}",
             })
           );
-          document.querySelector("#my_input").value = ""; // Clear input field after sending
+          document.querySelector("#my_input").value = ""; 
         }
       };
-
-      // Update the onmessage function to update the chat list
       chatSocket.onmessage = function (e) {
         const data = JSON.parse(e.data);
 
         if (data.message && data.sender) {
-          // Display the new message in the chatbox
           const chatbox = document.querySelector("#chatbox");
           const noMessages = document.querySelector(".no-messages");
           if (noMessages) {
@@ -319,10 +297,8 @@
               : "receiver");
           div.innerHTML = `<div><span>${data.message}</span></div>`;
           chatbox.appendChild(div);
-          // Scroll to the bottom of the chatbox
           scrollToBottom();
 
-          // Update the last message in the sidebar
           const lastMessage = document.querySelector(
             ".list-group-item.active #last-message"
           );
@@ -331,15 +307,11 @@
               data.sender === "{{ request.user.username }}"
                 ? "You: " + data.message
                 : data.message;
-
-            // update tyime4stamp in format of UTC time 12:00, 13:00 etc
             const timestamp = document.querySelector(
               ".list-group-item.active small"
             );
             const date = new Date().toUTCString();
             timestamp.innerHTML = date.slice(17, 22);
-
-            // update the chats list sorting by the last message timestamp in descending order
             const chats = document.querySelectorAll(".list-group-item");
             const chatsArray = Array.from(chats);
             const chatsSorted = chatsArray.sort((a, b) => {

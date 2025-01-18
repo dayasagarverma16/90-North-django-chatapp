@@ -1,9 +1,10 @@
+from datetime import datetime, timezone  
+from django.utils import timezone as django_timezone  
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .models import Message
 from django.db.models import Q
-
 
 @login_required
 def chat_room(request, room_name):
@@ -31,9 +32,10 @@ def chat_room(request, room_name):
             'last_message': last_message
         })
 
-    # Sort user_last_messages by the timestamp of the last_message in descending order
+    aware_datetime_min = django_timezone.make_aware(datetime.min, timezone.utc)
+
     user_last_messages.sort(
-        key=lambda x: x['last_message'].timestamp if x['last_message'] else None,
+        key=lambda x: x['last_message'].timestamp if x['last_message'] else aware_datetime_min,
         reverse=True
     )
 
